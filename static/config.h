@@ -1,0 +1,61 @@
+#pragma once
+#include <cstdint>
+#include <type_traits>   // IWYU pragma: keep
+
+namespace reflect::Static {
+#ifndef MAX_TEMPLATE_DEPTH
+#define MAX_TEMPLATE_DEPTH uint8_t
+using template_depth = MAX_TEMPLATE_DEPTH;
+#endif
+#ifndef MAX_TEMPLATE_CONSTANTS
+#define MAX_TEMPLATE_CONSTANTS uint8_t
+using template_constants = MAX_TEMPLATE_CONSTANTS;
+#endif
+
+#if __has_builtin(__builtin_is_virtual_base_of)
+
+template<class Base, class Derived>
+struct is_virtual_base_of
+    : public std::bool_constant<__builtin_is_virtual_base_of(Base, Derived)> {};
+
+#else
+template<class T, class U> constexpr bool __base_is_virtual_base_of(...) {
+    return true;
+}
+
+template<class T, class U,
+         typename std::void_t<decltype((U*)(std::declval<T*>()))>* = nullptr>
+constexpr bool __base_is_virtual_base_of(int) {
+    return false;
+}
+template<class T, class U>
+struct is_virtual_base_of
+    : public std::integral_constant<
+          bool, std::is_base_of_v<T, U> && __base_is_virtual_base_of<T, U>(0) &&
+                    !__base_is_virtual_base_of<U, T>(0)> {};
+template<class Base, class Derived>
+struct is_virtual_base_of<Base&, Derived> : public std::false_type {};
+template<class Base, class Derived>
+struct is_virtual_base_of<Base, Derived&> : public std::false_type {};
+template<class Base, class Derived>
+struct is_virtual_base_of<Base&, Derived&> : public std::false_type {};
+
+#endif
+template<class Base, class Derived>
+inline constexpr bool is_virtual_base_of_v =
+    is_virtual_base_of<Base, Derived>::value;
+
+
+template<typename... Args> struct type_list {
+    static constexpr template_depth count = sizeof...(Args);
+};
+
+using empty_list = type_list<>;
+
+template<typename T> struct is_type_list_of : std::false_type {};
+template<typename... Args>
+struct is_type_list_of<type_list<Args...>> : std::true_type {};
+template<typename T>
+inline constexpr bool is_type_list_of_v = is_type_list_of<T>::value;
+
+}   // namespace reflect::Static

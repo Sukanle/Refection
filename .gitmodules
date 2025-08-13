@@ -1,0 +1,3 @@
+[submodule "HLMD"]
+	path = HLMD
+	url = https://github.com/Sukanle/HLMD.git
