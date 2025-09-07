@@ -1,5 +1,5 @@
 #pragma once
-#include "macros_config.h"      // IWYU pragma: keep
+#include "HLMD/HLMD.h"      // IWYU pragma: keep
 #include "static/reflect.hpp"   // IWYU pragma: keep
 #include "type_traits.hpp"      // IWYU pragma: keep
 
@@ -21,10 +21,10 @@ namespace SRefl = reflect::Static;
 #define RFS_OBJ_MEM(MEM)                              \
     static constexpr auto _##MEM=                     \
         SRefl::field_traits<decltype(&class_t::MEM),  \
-        MAKE_TEMPLATE_STRING(#MEM)>{MAKE_OBJ_FIELD_TRAITS(MEM)};
+        class_t MAKE_TEMPLATE_STRING(#MEM)>{MAKE_OBJ_FIELD_TRAITS(MEM)};
 #define RFS_OBJ_MEM_TEM(MEM, NAME) \
     static constexpr auto _##MEM=  \
-        SRefl::field_traits<decltype(&class_t::MEM), NAME>{MAKE_OBJ_FIELD_TRAITS(MEM)};
+        SRefl::field_traits<decltype(&class_t::MEM), class_t, NAME>{MAKE_OBJ_FIELD_TRAITS(MEM)};
 #define RFS_OBJ_END() \
         };            \
     };

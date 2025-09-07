@@ -1,5 +1,4 @@
 #include "reflect.hpp"   // IWYU pragma: keep
-#include "static/reflect.hpp"
 #include <string>
 #include <vector>
 
@@ -241,9 +240,12 @@ constexpr const char* strbool(bool value) {
 RFS_OBJ_BEGIN(Person)
     RFS_OBJ_MEM(isFemale)
     // static constexpr auto _isFemale =
-    //     SRefl::field_traits<decltype(&class_t ::isFemale), nullptr>{
+    //     SRefl ::field_traits<decltype(&class_t::isFemale)>{
     //         &class_t ::isFemale, "isFemale"};
-    RFS_OBJ_MEM_TEM(getFemale, _template_getFamle)
+    // RFS_OBJ_MEM_TEM(getFemale, _template_getFamle)
+    static constexpr auto _getFemale =
+        SRefl::field_traits<decltype(&class_t ::getFemale), class_t, _template_getFamle>{
+            &class_t ::getFemale, "getFemale"};
 RFS_OBJ_END()
 
 RFS_ENUM_BEGIN(Color)
@@ -268,8 +270,7 @@ int main() {
     printf("\t\t%s:\n", ClassInfo::Registry::_getFemale.from_TempName().data());
     printf("\t\tFuntion running:\n");
     printf("\t\t\t");
-    const char* tmp = strbool((man.*ClassInfo::Registry::_getFemale._ptr)());
-    printf("\t\tFuntion retval: %s\n", tmp);
+    printf("\t\tFuntion retval: %s\n", strbool((man.*ClassInfo::Registry::_getFemale._ptr)()));
 
     printf("\n****************************************\n");
 

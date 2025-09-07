@@ -11,7 +11,7 @@ template<typename, typename = void> struct fn_type;
 
 template<typename Ret, typename... Args, typename Class>
 struct fn_type<Ret(Args...), Class> {
-    using return_t = Ret;
+    using ret_t = Ret;
     using class_t = Class;
     using args_t = std::tuple<Args...>;
 };
@@ -24,7 +24,7 @@ template<typename Ret, typename... Args, typename Class>
 struct fn_type<Ret (*)(Args...), Class> : fn_type<Ret(Args...), Class> {};
 template<typename Ret, typename Class, typename... Args>
 struct fn_type<Ret (Class::*)(Args...)> {
-    using return_t = Ret;
+    using ret_t = Ret;
     using class_t = Class;
     using args_t = std::tuple<Args...>;
 };
@@ -94,7 +94,7 @@ DEF_NOMEM_FN_TRAITS(noexcept, 0x01)
     struct fn_traits<Ret (Class::*)(Args...) modifier, Class, Name>      \
         : __base_fn_traits<Ret (Class::*)(Args...), Class, Name> {       \
         using m_fn_ptr = Ret (Class::*)(Args...) modifier;               \
-        using fn_t = Ret(Class, Args...) modifier;                       \
+        using fn_t = m_fn_ptr;                                           \
         using type = fn_t;                                               \
         static constexpr uint8_t modifie = value;                        \
     };

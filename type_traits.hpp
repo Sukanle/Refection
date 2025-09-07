@@ -1,8 +1,6 @@
 #pragma once
 
-#include "static/enum_traits.hpp"   // IWYU pragma: keep
-#include "static/fn_traits.hpp"     // IWYU pragma: keep
-#include "static/var_traits.hpp"    // IWYU pragma: keep
+#include "static/config.h"
 
 namespace reflect::Static {
 

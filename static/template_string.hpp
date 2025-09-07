@@ -36,7 +36,7 @@ template<uint8_t N> struct template_string {
     #define DEFAULT_TEMPLATE_STRING(name, str) \
         reflect::Static::template_string name = reflect::Static::template_string{str}
     #define NORMAL_TEMPLATE_STRING(name) reflect::Static::template_string name
-    #define MAKE_TEMPLATE_STRING(str) str
+    #define MAKE_TEMPLATE_STRING(str) , str
 template<template_string Name>
 consteval auto NameAccessor(){
     return Name.data();
@@ -44,7 +44,7 @@ consteval auto NameAccessor(){
 #else
     #define DEFAULT_TEMPLATE_STRING(name, str) const char *name = nullptr
     #define NORMAL_TEMPLATE_STRING(name) const char *name
-    #define MAKE_TEMPLATE_STRING(str) nullptr
+    #define MAKE_TEMPLATE_STRING(str)
 template<const char *Name>
 consteval const char *NameAccessor(){
     return Name;
