@@ -4,12 +4,12 @@
 
 namespace reflect::Static {
 #ifndef MAX_TEMPLATE_DEPTH
-#define MAX_TEMPLATE_DEPTH uint8_t
-using template_depth = MAX_TEMPLATE_DEPTH;
+#define MAX_TEMPLATE_DEPTH std::numeric_limits<template_depth>::max()
+using template_depth = uint8_t;
 #endif
 #ifndef MAX_TEMPLATE_CONSTANTS
-#define MAX_TEMPLATE_CONSTANTS uint8_t
-using template_constants = MAX_TEMPLATE_CONSTANTS;
+#define MAX_TEMPLATE_CONSTANTS std::numeric_limits<template_constants>::max()
+using template_constants = uint8_t;
 #endif
 
 #if __has_builtin(__builtin_is_virtual_base_of)
